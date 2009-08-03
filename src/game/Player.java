@@ -7,6 +7,7 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.Image;
 
 import engine.TextureManager;
+import engine.Vector2D;
 
 public class Player {
 
@@ -14,7 +15,9 @@ public class Player {
 	private Image texture;
 	private double x;
 	private double y;
-	private float angle;
+	private float angle;	
+	
+	private Vector2D lastAimVector;	
 	
 	private List<Bullet> bulletList;
 	
@@ -25,6 +28,7 @@ public class Player {
 		this.y = y;
 		this.angle = angle;
 		texture.setCenterOfRotation(5, 7);		
+		this.lastAimVector = new Vector2D(x, y);
 		
 		bulletList = new ArrayList<Bullet>();
 	}
@@ -49,6 +53,10 @@ public class Player {
 		this.y = y;
 	}
 	
+	public void setLastAimVector(Vector2D vec) {
+		this.lastAimVector = vec;
+	}
+	
 	public float getAngle() {
 		return texture.getRotation();
 	}
@@ -59,11 +67,30 @@ public class Player {
 	}
 	
 	public void shoot() {
-		bulletList.add(new Bullet(TextureManager.getTextureByKey("bullet1"), (int)x, (int)y, angle));
+		bulletList.add(new Bullet(TextureManager.getTextureByKey("bullet1"), (int)x+5, (int)y+6, angle, lastAimVector));
+	}
+	
+	public void updateBullets() {
+		
+		for(int i=bulletList.size() -1; i >= 0; i--) {
+			Bullet b = (Bullet)bulletList.get(i);
+			if(b.isActive() == false) {
+				bulletList.remove(i);	
+			}
+			
+		}
+		for(Bullet b : bulletList) {
+			if(b.isActive()) {
+				b.update();	
+			}									
+		}
 	}
 	
 	public void draw() {
 		texture.draw((float)x, (float)y);
+		for(Bullet b : bulletList) {
+			b.draw();
+		}
 	}
 
 }

@@ -8,6 +8,7 @@ import org.lwjgl.util.vector.Vector;
 import engine.Config;
 import engine.Core;
 import engine.TextureManager;
+import engine.Vector2D;
 
 public class ZombieNation {
 	
@@ -27,9 +28,8 @@ public class ZombieNation {
 	}
 	
 	public void loadMap() {
-		currentMap = new Map();
-		
-		currentMap.addMapBlock(new MapBlock(textureManager.getTextureByKey("map2"), -250, -250));
+		currentMap = new Map(textureManager.getTextureByKey("map3"), -250, -250);
+				
 		currentMap.addForbiddenZone(new Rectangle(-250, -250, 512, 512));
 		currentMap.addForbiddenZone(new Rectangle(256 - 250, 512 + 256 - 250, 512, 512));
 		
@@ -43,37 +43,30 @@ public class ZombieNation {
 		return player;
 	}
 	
-	public void walkRight() {
-		//if (currentMap.isWalkable(player.getX() + 1, player.getY())) {
-			//currentMap.moveLeft(1);
-			//player.setRotation(90);
-			player.setRotation(player.getAngle() + 0.2f);
-		//}
+	public void walkRight(long delta) {		
 		
+		player.setRotation(player.getAngle() + 3f);				
+		player.setLastAimVector(getAimVector());
 	}
 	
-	public void walkLeft() {
-		//if (currentMap.isWalkable(player.getX() - 1, player.getY())) {
-			//currentMap.moveRight(1);
-			//player.setRotation(270);
-			player.setRotation(player.getAngle() - 0.2f);
-		//}
-		
+	public void walkLeft(long delta) {
+	
+		player.setRotation(player.getAngle() - 3f);		
+		player.setLastAimVector(getAimVector());
 	}
 	
-	public void walkDown() {
-		if (currentMap.isWalkable((int)player.getX(), (int)player.getY() + 1)) {					
+	public void walkDown(long delta) {					
 		
 			
 			double angle = player.getAngle();			
 			
 			// Create a guidance vector as a base for our new vector 
-			double aX = player.getX();
-			double aY = player.getY() - 1;
+			double aX = currentMap.getX();
+			double aY = currentMap.getY() - 5;
 			
 			// Get the player coordinates
-			double bX = player.getX();
-			double bY = player.getY();
+			double bX = currentMap.getX();
+			double bY = currentMap.getY();
 			
 			// Move our guidance vector and player vector to the base (0,0)
 			double oX = aX - bX;
@@ -82,32 +75,35 @@ public class ZombieNation {
 			// Perform the rotation over our angle.
 			double pX = Math.cos((int)-angle * Math.PI/180)*oX + (Math.sin((int)-angle * Math.PI/180)*oY);
 			double pY = -Math.sin((int)-angle * Math.PI/180)*oX + Math.cos((int)-angle * Math.PI/180)*oY;					
+			
+			// Add the result vector to the player vector to calculate the new player coordinates
+			double playerX = player.getX() + pX;
+			double playerY = player.getY() + pY;
 			
 			// Add the result vector to the player vector to calculate the new player coordinates
 			double cX = bX - pX;
 			double cY = bY - pY;					
 			
-			if (currentMap.isWalkable((int)cX, (int)cY)) {
-				// Update the player's position with the new coordinates
-				player.setX(cX);
-				player.setY(cY);
-			}
-						
-		}
+			if (currentMap.isWalkable((int)playerX, (int)playerY)) {
+				//Update the map position based on the new coordinates
+				currentMap.setPosition(pX, pY);
+				Vector2D lastAimVector = new Vector2D(pX, pY);
+				player.setLastAimVector(lastAimVector);
+			}							
 		
 	}
 	
-	public void walkUp() {		
+	public void walkUp(long delta) {		
 			
 			double angle = player.getAngle();			
 			
 			// Create a guidance vector as a base for our new vector 
-			double aX = player.getX();
-			double aY = player.getY() - 0.1;
+			double aX = currentMap.getX();
+			double aY = currentMap.getY() - 5;
 			
-			// Get the player coordinates
-			double bX = player.getX();
-			double bY = player.getY();
+			// Get the map coordinates
+			double bX = currentMap.getX();
+			double bY = currentMap.getY();
 			
 			// Move our guidance vector and player vector to the base (0,0)
 			double oX = aX - bX;
@@ -118,19 +114,49 @@ public class ZombieNation {
 			double pY = -Math.sin((int)-angle * Math.PI/180)*oX + Math.cos((int)-angle * Math.PI/180)*oY;					
 			
 			// Add the result vector to the player vector to calculate the new player coordinates
+			double playerX = player.getX() + pX;
+			double playerY = player.getY() + pY;
+			
 			double cX = bX + pX;
 			double cY = bY + pY;					
 			
-			if (currentMap.isWalkable((int)cX, (int)cY)) {
-				// Update the player's position with the new coordinates
-				//currentMap.setPosition(cX, cY);
-				player.setX(cX);
-				player.setY(cY);
+			if (currentMap.isWalkable((int)playerX, (int)playerY)) {
+				// Update the map position based on the new coordinates
+				currentMap.setPosition(-pX, -pY);	
+				
+				Vector2D lastAimVector = new Vector2D(pX, pY);
+				player.setLastAimVector(lastAimVector);
 			}
 		
 	}
 	
-	public void draw(Graphics g) {		
+	public Vector2D getAimVector() {
+		double angle = player.getAngle();			
+		
+		// Create a guidance vector as a base for our new vector 
+		double aX = currentMap.getX();
+		double aY = currentMap.getY() - 5;
+		
+		// Get the map coordinates
+		double bX = currentMap.getX();
+		double bY = currentMap.getY();
+		
+		// Move our guidance vector and player vector to the base (0,0)
+		double oX = aX - bX;
+		double oY = aY - bY;
+					
+		// Perform the rotation over our angle.
+		double pX = Math.cos((int)-angle * Math.PI/180)*oX + (Math.sin((int)-angle * Math.PI/180)*oY);
+		double pY = -Math.sin((int)-angle * Math.PI/180)*oX + Math.cos((int)-angle * Math.PI/180)*oY;					
+		 
+		
+		return new Vector2D(pX, pY);						
+	}
+	
+	public void draw(Graphics g) {
+		
+		player.updateBullets();
+		
 		currentMap.draw(g);
 		player.draw();
 	}

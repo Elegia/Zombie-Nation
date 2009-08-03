@@ -27,6 +27,9 @@ public class Core extends BasicGame {
 	private int oldMouseX;
 	private int oldMouseY;
 	
+	private long delta2;
+	private long lastLoopTime;
+	
 	private ZombieNation game;	
 	
     public Core()
@@ -45,7 +48,10 @@ public class Core extends BasicGame {
     	game = new ZombieNation(this);    	    	  
     	
     	gc.setShowFPS(true);    
-    	
+    	gc.setClearEachFrame(true);
+    	gc.setVSync(true);
+    	//gc.setMaximumLogicUpdateInterval(10);
+    	gc.setTargetFrameRate(60);
     }
  
     /**
@@ -116,7 +122,7 @@ public class Core extends BasicGame {
     public void update(GameContainer gc, int delta) 
 			throws SlickException     
     {
-    	 
+    	
     	Input input = gc.getInput();
     	 
     	int mouseX = input.getMouseX();
@@ -159,23 +165,27 @@ public class Core extends BasicGame {
     			}
     			    					
     	}
-    	
     	*/
-    	if (input.isKeyDown(input.KEY_LEFT)) {			
-			game.walkLeft();
-		}		
-		
-		if (input.isKeyDown(input.KEY_RIGHT)) {		
-			game.walkRight();
-		}	
+    	    	    	
+    	if (input.isKeyDown(input.KEY_LEFT)) {    		
+    		game.walkLeft(delta);
+    	}		
+    		
+    	if (input.isKeyDown(input.KEY_RIGHT)) {		
+    		game.walkRight(delta);
+    	}	
 
-		if (input.isKeyDown(input.KEY_DOWN)) {			
-			game.walkDown();
-		}		
-		
-		if (input.isKeyDown(input.KEY_UP)) {			
-			game.walkUp();
-		}
+    	if (input.isKeyDown(input.KEY_DOWN)) {			
+    		game.walkDown(delta);
+    	}		
+    		
+    	if (input.isKeyDown(input.KEY_UP)) {			
+    		game.walkUp(delta);
+    	}    	
+    	
+    	if (input.isKeyDown(input.KEY_SPACE)){
+    		game.getPlayer().shoot();
+    	}
 		
 		/*
        	if(!input.isMouseButtonDown(1)) {
@@ -265,6 +275,7 @@ public class Core extends BasicGame {
     public void render(GameContainer gc, Graphics g) 
 			throws SlickException 
     {
+    	    	
     	game.draw(g);    	
     		    	    	      	    
     }           
