@@ -17,12 +17,12 @@ public class Config {
 	
 	//private Core instance;
 	
-	private static TextureManager textureManager;	
+	private static ResourceManager resourceManager;	
 	
-	public Config(int screenWidth, int screenHeight, TextureManager textureManager) {
+	public Config(int screenWidth, int screenHeight, ResourceManager resourceManager) {
 		Config.screenWidth = screenWidth;
 		Config.screenHeight = screenHeight; 
-		Config.textureManager = textureManager;
+		Config.resourceManager = resourceManager;
 		
 		try {
             InputStream oi = ResourceLoader
@@ -43,8 +43,8 @@ public class Config {
 		return screenHeight;
 	}
 	
-	public static TextureManager getTextureManager() {
-		return textureManager;
+	public static ResourceManager getResourceManager() {
+		return resourceManager;
 	}
 	
 	public static TrueTypeFont getCurrentFont() {

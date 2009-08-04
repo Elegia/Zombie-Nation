@@ -9,6 +9,8 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
+import org.lwjgl.opengl.GL11;
 
 import game.ZombieNation;
 
@@ -41,7 +43,7 @@ public class Core extends BasicGame {
     public void init(GameContainer gc) 
 			throws SlickException {
      	
-    	TextureManager textureManager = new TextureManager();
+    	ResourceManager textureManager = new ResourceManager();
     	
     	new Config(800, 800, textureManager);   
     	      	    	  
@@ -52,6 +54,7 @@ public class Core extends BasicGame {
     	gc.setVSync(true);
     	//gc.setMaximumLogicUpdateInterval(10);
     	gc.setTargetFrameRate(60);
+    	
     }
  
     /**
@@ -187,6 +190,7 @@ public class Core extends BasicGame {
     		game.getPlayer().shoot();
     	}
 		
+    	
 		/*
        	if(!input.isMouseButtonDown(1)) {
     		isRightMouseDown = false;
@@ -277,7 +281,7 @@ public class Core extends BasicGame {
     {
     	    	
     	game.draw(g);    	
-    		    	    	      	    
+    	
     }           
        
     

@@ -6,7 +6,7 @@ import java.util.List;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.Image;
 
-import engine.TextureManager;
+import engine.ResourceManager;
 import engine.Vector2D;
 
 public class Player {
@@ -67,7 +67,7 @@ public class Player {
 	}
 	
 	public void shoot() {
-		bulletList.add(new Bullet(TextureManager.getTextureByKey("bullet1"), (int)x+5, (int)y+6, angle, lastAimVector));
+		bulletList.add(new Bullet(ResourceManager.getTextureByKey("bullet1"), (int)x+5, (int)y+6, angle, lastAimVector));
 	}
 	
 	public void updateBullets() {

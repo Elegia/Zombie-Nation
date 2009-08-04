@@ -7,66 +7,27 @@ package engine;
  *
  */
 public class Camera {
-
-	private int cameraX;
-	private int cameraY;
-	private int cameraScreenWidth;
-	private int cameraScreenHeight;
 	
-	public Camera(int cameraScreenWidth, int cameraScreenHeight) {
-		this.cameraX = 0;
-		this.cameraY = 0;
-		this.cameraScreenWidth = cameraScreenWidth;
-		this.cameraScreenHeight = cameraScreenHeight;
+	public Camera() {		
 	}
 	
-	public void setCameraX(int cameraX) {
-		this.cameraX = cameraX;
-	}
-	
-	public int getCameraX() {
-		return cameraX;
-	}
-	
-	public void setCameraY(int cameraY) {
-		this.cameraY = cameraY;
-	}
-	
-	public int getCameraY() {
-		return cameraY;
-	}
-	
-	public void moveCameraLeft(int offset) {
-		this.cameraX -= offset;
-	}
-	
-	public void moveCameraRight(int offset) {
-		this.cameraX += offset;
-	}
-	
-	public void moveCameraUp(int offset) {
-		this.cameraY -= offset;
-	}
-	
-	public void moveCameraDown(int offset) {
-		this.cameraY += offset;
-	}
-	
-	
-	public void setCameraScreenWidth(int cameraScreenWidth) {
-		this.cameraScreenWidth = cameraScreenWidth;
-	}
-	
-	public int getCameraScreenWidth() {
-		return cameraScreenWidth;
-	}
-	
-	public void setCameraScreenHeight(int cameraScreenHeight) {
-		this.cameraScreenHeight = cameraScreenHeight;
-	}
-	
-	public int getCameraScreenHeight() {
-		return cameraScreenHeight;
+	public Vector2D calculateAimVector(Vector2D baseVector, Vector2D positionVector, double angle) {
+		// Create a guidance vector as a base for our new vector 
+		double aX = baseVector.getX();
+		double aY = baseVector.getY();
+				
+		double bX = positionVector.getX();
+		double bY = positionVector.getY();
+		
+		// Move our guidance vector and position vector to the base (0,0)
+		double oX = aX - bX;
+		double oY = aY - bY;
+					
+		// Perform the rotation over the angle.
+		double pX = Math.cos((int)-angle * Math.PI/180)*oX + (Math.sin((int)-angle * Math.PI/180)*oY);
+		double pY = -Math.sin((int)-angle * Math.PI/180)*oX + Math.cos((int)-angle * Math.PI/180)*oY;					
+		 		
+		return new Vector2D(pX, pY);						
 	}
 		
 }
