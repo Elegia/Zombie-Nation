@@ -102,8 +102,7 @@ public class ZombieNation {
 			updateEntityPositions(updateVector);
 			player.setLastAimVector(aimVector);
 		}							
-	
-		gameUpdate();
+			
 	}
 	
 	public void walkUp(long delta) {		
@@ -127,8 +126,6 @@ public class ZombieNation {
 			player.setLastAimVector(aimVector);
 		}	
 		
-		gameUpdate();
-		
 	}
 	
 	public void updateEntityPositions(Vector2D updateVec) {
@@ -145,14 +142,11 @@ public class ZombieNation {
 		for(Zombie zombie : zombieList) {
 			
 			double distanceX = Math.abs(player.getX() - zombie.getX());
-			double distanceY = Math.abs(player.getY() - zombie.getY());
-			System.out.println("distanceX: " + distanceX);
-			System.out.println("distanceY: " + distanceY);
+			double distanceY = Math.abs(player.getY() - zombie.getY());			
 			
-			if(distanceX <= 500 && distanceY <= 500) {
-				System.out.println("Updating");
+			if(distanceX <= 500 && distanceY <= 500) {				
 				zombie.facePlayer(player);	
-				//zombie.move();
+				zombie.move();
 			}
 		}
 		

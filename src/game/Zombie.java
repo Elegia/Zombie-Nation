@@ -2,6 +2,7 @@ package game;
 
 import org.newdawn.slick.Image;
 
+import engine.Camera;
 import engine.Vector2D;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -23,7 +24,7 @@ public class Zombie {
 		this.x = x;
 		this.y = y;
 		this.angle = angle;
-		texture.setCenterOfRotation(5, 7);		
+		texture.setCenterOfRotation(5, 7);			
 		this.lastAimVector = new Vector2D(x, y);
 	}
 	
@@ -69,101 +70,42 @@ public class Zombie {
 
 	public void facePlayer(Player player) {		
 		
-		/*
-		// Establish a base vector
-		double bX = x;
-		double bY = y - 1;		
-		//Vector2D b = new Vector2D(x, y-1);
-		Vector2f b = new Vector2f((float)x, (float)y-1);
-		b = b.normalise();
 		
-		// Calculate the dot product of the player vector and the base vector
-		double pX = player.getX();
-		double pY = player.getY();
+		double normalisedPlayerX = player.getX() - x;
+		double normalisedPlayerY = player.getY() - y;
 		
-		Vector2f p = new Vector2f((float)player.getX(), (float)player.getY());
-		p = p.normalise();
-		//Vector2D p = new Vector2D(player.getX(), player.getY());
-
+		double baseVectorX = 0;
+		double baseVectorY = -1;
 		
-		double dotProduct = p.getX()*b.getX() + p.getY()*b.getY();
+		double dotproduct = normalisedPlayerX * baseVectorX + normalisedPlayerY * baseVectorY;
 		
-		System.out.println("dotproduct: " + dotProduct);
-		//double angle = Math.acos(dotProduct) * (180/Math.PI);
+		double normPlayerLength = Math.sqrt(Math.pow(normalisedPlayerX, 2) + Math.pow(normalisedPlayerY, 2));
+		double normBaseVecLength = Math.sqrt(Math.pow(baseVectorX, 2) + Math.pow(baseVectorY, 2));
 		
+		double cosAlpha = dotproduct/(normPlayerLength*normBaseVecLength);
+		double alpha = Math.acos(cosAlpha) * 180/Math.PI;
 		
+		if(player.getX() < x) {
+			alpha = -alpha;
+		}
+				
+		setRotation((float)alpha);		
+	}
+	
+	public void move() {
 		
-		double vecPLength = Math.sqrt(pX*pX + pX*pX);
-		double vecBLength = Math.sqrt(bY*bY + bY*bY);
+		Camera camera = new Camera();
 		
-		double angle = Math.acos(dotProduct/(vecPLength * vecBLength)) * (180/Math.PI);
-		
-		
-		setRotation((float)(int)angle);
-		
-		//cos^-1(a.b/|a||b|)*(180/pi) 
-		
-		*/
-		
-		Vector2f o = new Vector2f(0, 0);
-		Vector2D a = new Vector2D(player.getX(), player.getY());
-		Vector2D b = new Vector2D(x, y);
-		
-		double aXb = a.getX() * b.getX() + a.getY() * b.getY();
-		double aLength = a.getX()*a.getX() + a.getY()*a.getY();
-		double bLength = b.getX()*b.getX() + b.getY()*b.getY();
-		
-		double cos = aXb/Math.sqrt(aLength*bLength);
-		double sin = a.getX()*b.getY() - a.getY()*b.getX();			
-		
-		double result = Math.acos(cos);
-		
-		System.out.println("angle: " + result);
-		setRotation((float)(result * 180/Math.PI));
-		/*
-		double x1 = player.getX();
-		double y1 = player.getY();
-		
-		double x2 = x;
-		double y2 = y;
-		double result = Math.atan2(Math.abs(x1*y2-y1*x2), Math.abs(x1*x2+y1*y2));
-		*/
-		
-		
-		/*
-		 x1 = 3; y1 = 5;
-		 x2 = 5; y2 = 6;
-		 ang = atan2(abs(x1*y2-y1*x2),x1*x2+y1*y2);
-		 */
-		
-		/*
-		Vector2f t1 = new Vector2f(a.getX() - o.getX(), a.getY() - o.getY());
-		Vector2f t2 = new Vector2f(b.getX() - o.getX(), b.getY() - o.getY());
-			*/	
-		
-		/*
-		double x1 = player.getX();
-		double y1 = player.getY();
-		
-		double x2 = x;
-		double y2 = y;
-		
-		double alen = Math.sqrt(x1 * x1 + y1 * y1);
-		double blen = Math.sqrt(x2 * x2 + y2 * y2);
-		double piadj = 180/3.14159265;
-		double dotproduct = x1 * x2 + y1 * y2;
-		double acosth = (blen > 0) ? dotproduct/blen : 0;
-		double costh = (alen > 0) ? acosth/alen : 0;
-		
-		//costh = dotproduct/blen*alen;
-		double theta = Math.acos(costh)*piadj;
-		*/
+		Vector2D baseVector = new Vector2D(x, y - 1);
+		Vector2D posVector = new Vector2D(x, y);
+		Vector2D aimVector = camera.calculateAimVector(baseVector, posVector, this.angle);					
 			
-		/*
-			1 - Dot product, divided by norms, gives cosine.
-			2 - Cross product, divided by norms, gives sine.
-			3 - Give sine and cosine to a 2-argument arctangent function.
-		*/
+		// Add the result vector to the player vector to calculate the new player coordinates
+		double newX = x + aimVector.getX();
+		double newY = y + aimVector.getY();
+		
+		setX(newX);
+		setY(newY);
 	}
 	
 }

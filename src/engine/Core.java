@@ -190,7 +190,7 @@ public class Core extends BasicGame {
     		game.getPlayer().shoot();
     	}
 		
-    	
+    	game.gameUpdate();
 		/*
        	if(!input.isMouseButtonDown(1)) {
     		isRightMouseDown = false;
