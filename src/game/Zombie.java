@@ -26,6 +26,7 @@ public class Zombie {
 		this.angle = angle;
 		texture.setCenterOfRotation(5, 7);			
 		this.lastAimVector = new Vector2D(x, y);
+		this.health = 100;
 	}
 	
 	public String getName() {
@@ -107,5 +108,15 @@ public class Zombie {
 		setX(newX);
 		setY(newY);
 	}
+
+	public int getHealth() {
+		return health;
+	}
+	
+	public void hit() {
+		health -= 25;					
+	}
+
+	
 	
 }

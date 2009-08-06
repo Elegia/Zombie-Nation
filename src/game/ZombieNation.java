@@ -2,6 +2,7 @@ package game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Music;
@@ -38,18 +39,28 @@ public class ZombieNation {
 		this.player = new Player("Elegia", resourceManager.getTextureByKey("player"), 400, 300, 0);
 		
 		this.zombieList = new ArrayList<Zombie>();
-		for(int i=0; i<1; i++) {
-			zombieList.add(new Zombie("Zombie", resourceManager.getTextureByKey("zombie1"), 380, 320, 0));
+		int baseX = 380;
+		int baseY = 320;
+		Random rand = new Random();
+		for(int i=0; i<10; i++) {
+						
+			zombieList.add(new Zombie("Zombie", resourceManager.getTextureByKey("zombie1"), baseX + rand.nextInt(100), baseY + rand.nextInt(100), 0));
 		}
 		//music = ResourceManager.getSoundByKey("music1");
     	//music.play();
 	}
 	
 	public void loadMap() {
-		currentMap = new Map(resourceManager.getTextureByKey("map3"), -250, -250);
+		
+		int mapX = -500;
+		int mapY = -500;
+		
+		currentMap = new Map(resourceManager.getTextureByKey("map3"), mapX, mapY);
 				
-		currentMap.addForbiddenZone(new Rectangle(-250, -250, 512, 512));
+		/*
+		currentMap.addForbiddenZone(new Rectangle(-mapX, -250, 512, 512));
 		currentMap.addForbiddenZone(new Rectangle(256 - 250, 512 + 256 - 250, 512, 512));
+		*/
 		
 	}
 	
@@ -138,22 +149,37 @@ public class ZombieNation {
 	}
 	
 	public void gameUpdate() {
-		// Let all zombies within 500 meters run towards you
-		for(Zombie zombie : zombieList) {
+		
+		// Update the zombies
+		for(int i=zombieList.size() -1; i>=0; i--) {
+			Zombie zombie = (Zombie)zombieList.get(i);
+					
 			
-			double distanceX = Math.abs(player.getX() - zombie.getX());
-			double distanceY = Math.abs(player.getY() - zombie.getY());			
-			
-			if(distanceX <= 500 && distanceY <= 500) {				
-				zombie.facePlayer(player);	
-				zombie.move();
+			if(zombie.getHealth() <= 0) {
+				
+				// Remove all zombies that have a health <= 0
+				zombieList.remove(i);
+			} else {
+				
+				// Let the zombies within 500 meters run towards you
+				
+				double distanceX = Math.abs(player.getX() - zombie.getX());
+				double distanceY = Math.abs(player.getY() - zombie.getY());			
+				
+				if(distanceX <= 500 && distanceY <= 500) {				
+					zombie.facePlayer(player);	
+					zombie.move();
+				}
 			}
-		}
+			
+		}		
+		
+		// Update all flying bullets (by the player). This will also check whether zombies are hit or if bullets 
+		// are out of range and update everything accordingly.
+		player.updateBullets(zombieList);
 		
 	}
-	public void draw(Graphics g) {
-		
-		player.updateBullets();
+	public void draw(Graphics g) {			
 		
 		currentMap.draw(g);
 		
@@ -162,6 +188,46 @@ public class ZombieNation {
 		}
 		player.draw();
 				
+	}
+
+	/**
+	 * Handles any mouse movement
+	 * 
+	 * @param mouseX
+	 * @param mouseY
+	 */
+	public void mouseMoved(int mouseX, int mouseY) {
+		
+		// Make the player face the mouse position, so calculate the required angle and rotate the player accordingly
+		double normalisedMouseX = mouseX - player.getX();
+		double normalisedMouseY = mouseY - player.getY();
+		
+		double baseVectorX = 0;
+		double baseVectorY = -1;
+		
+		double dotproduct = normalisedMouseX * baseVectorX + normalisedMouseY * baseVectorY;
+		
+		double normPlayerLength = Math.sqrt(Math.pow(normalisedMouseX, 2) + Math.pow(normalisedMouseY, 2));
+		double normBaseVecLength = Math.sqrt(Math.pow(baseVectorX, 2) + Math.pow(baseVectorY, 2));
+		
+		double cosAlpha = dotproduct/(normPlayerLength*normBaseVecLength);
+		double alpha = Math.acos(cosAlpha) * 180/Math.PI;
+		
+		if(player.getX() < mouseX) {
+			alpha = -alpha;
+		}
+		
+		player.setRotation(-(float)alpha);
+		
+		// Create the aim vector that would make the player walk in the right direction (this is done when pressing the 
+		// up or down key, but is once again needed here in case the player would fire bullets after rotating, as the 
+		// bullets need the aim vector to move in the right direction).
+		Vector2D baseVector = new Vector2D(currentMap.getX(), currentMap.getY() - 5);
+		Vector2D posVector = new Vector2D(currentMap.getX(), currentMap.getY());
+		Vector2D aimVector = camera.calculateAimVector(baseVector, posVector, player.getAngle());
+		
+		player.setLastAimVector(aimVector);		
+		//setRotation((float)alpha);		
 	}
 	
 }

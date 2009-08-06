@@ -39,38 +39,7 @@ public class Bullet {
 	public void setRotation(float angle) {
 		texture.setRotation(angle);
 		this.angle = angle;
-	}
-	
-	/*
-	public void moveLeft() {
-		setRotation(270);
-		x -= speed;
-		distanceTravelled += speed;
-		
-		if(distanceTravelled >= range) {
-			
-		}
-	}
-	
-	
-	public void moveRight() {
-		setRotation(90);
-		x += speed;
-		distanceTravelled += speed;
-	}
-	
-	public void moveDown() {
-		setRotation(180);
-		y += speed;
-		distanceTravelled += speed;
-	}
-	
-	public void moveUp() {
-		setRotation(0);
-		y -= speed;
-		distanceTravelled += speed;
-	}
-	*/
+	}	
 	
 	public void draw() {
 		texture.draw((int)x,(int)y);
@@ -78,6 +47,10 @@ public class Bullet {
 
 	public boolean isActive() {
 		return isActive;
+	}
+	
+	public void setActive(boolean active) {
+		this.isActive = active;
 	}
 	
 	public void update() {		

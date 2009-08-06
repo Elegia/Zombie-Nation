@@ -3,6 +3,7 @@ package game;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.Image;
 
@@ -70,18 +71,35 @@ public class Player {
 		bulletList.add(new Bullet(ResourceManager.getTextureByKey("bullet1"), (int)x+5, (int)y+6, angle, lastAimVector));
 	}
 	
-	public void updateBullets() {
+	public Object getBulletList() {
+		return bulletList;
+	}
+	
+	public void updateBullets(List<Zombie> zombieList) {
 		
+		// Check for bullets outside their range and remove them
 		for(int i=bulletList.size() -1; i >= 0; i--) {
 			Bullet b = (Bullet)bulletList.get(i);
 			if(b.isActive() == false) {
-				bulletList.remove(i);	
-			}
-			
+				bulletList.remove(i);				
+			}			
 		}
+		
+		// Check for bullets that hit a zombie and remove the bullet and damage the zombie				
 		for(Bullet b : bulletList) {
 			if(b.isActive()) {
+				
 				b.update();	
+				
+				for(Zombie zombie : zombieList) {										
+					Rectangle zombieBox = new Rectangle((int)zombie.getX() - 5, (int)zombie.getY() - 5, 11, 11);					
+					
+					if (zombieBox.contains((int)b.getX(), (int)b.getY())) {
+						zombie.hit();
+						b.setActive(false);						
+					}					
+				}
+				
 			}									
 		}
 	}
@@ -92,5 +110,7 @@ public class Player {
 			b.draw();
 		}
 	}
+
+	
 
 }

@@ -129,150 +129,38 @@ public class Core extends BasicGame {
     	Input input = gc.getInput();
     	 
     	int mouseX = input.getMouseX();
-    	int mouseY = input.getMouseY();
+    	int mouseY = input.getMouseY();    	 
     	
-    	/*
-    	if (input.isMouseButtonDown(1)) {    		
-    			
-    			if(isRightMouseDown == true && dragAllowed) {
-    				    				        		
-        			
-        			if(mouseX > (oldMouseX + 15)) {
-        				game.getWorldMap().moveMapLeft();
-        			}
-        			
-        			if(mouseX < (oldMouseX - 15)) {
-        				game.getWorldMap().moveMapRight();
-        			}
-        			
-        			if(mouseY > (oldMouseY + 15)) {
-        				game.getWorldMap().moveMapUp();
-        			}
-        			
-        			if(mouseY < (oldMouseY - 15)) {
-        				game.getWorldMap().moveMapDown();
-        			}
-        			
-        			oldMouseX = mouseX;
-        			oldMouseY = mouseY;   
-        			dragAllowed = false;
-        			dragTimer.restart();
-        			    			
-    			}
-    			
-    			if(isRightMouseDown == false) {
-    				isRightMouseDown = true;
-    				dragAllowed = false;
-    				dragTimer.restart();
-    				
-    			}
-    			    					
-    	}
-    	*/
+    	game.mouseMoved(mouseX, mouseY);
     	    	    	
-    	if (input.isKeyDown(input.KEY_LEFT)) {    		
+    	if (input.isKeyDown(input.KEY_Q)) {    		
     		game.walkLeft(delta);
     	}		
     		
-    	if (input.isKeyDown(input.KEY_RIGHT)) {		
+    	if (input.isKeyDown(input.KEY_D)) {		
     		game.walkRight(delta);
     	}	
 
-    	if (input.isKeyDown(input.KEY_DOWN)) {			
+    	if (input.isKeyDown(input.KEY_S)) {			
     		game.walkDown(delta);
     	}		
     		
-    	if (input.isKeyDown(input.KEY_UP)) {			
+    	if (input.isKeyDown(input.KEY_Z)) {			
     		game.walkUp(delta);
     	}    	
     	
-    	if (input.isKeyDown(input.KEY_SPACE)){
+    	if(input.isMouseButtonDown(input.MOUSE_LEFT_BUTTON)) {
     		game.getPlayer().shoot();
     	}
-		
+    	
+    	/*
+    	if (input.isKeyDown(input.KEY_SPACE)){
+    		
+    	}
+		*/
+    	
     	game.gameUpdate();
-		/*
-       	if(!input.isMouseButtonDown(1)) {
-    		isRightMouseDown = false;
-    		dragAllowed = false;
-    		dragTimer.stop();
-    	}
-    	
-    	
-    	// KEYBOARD INPUT
-    	if (input.isKeyDown(input.KEY_LEFT)) {
-        	if(isKeyLeftDown == false) {
-        		game.getWorldMap().moveMapLeft();
-        		game.getWorldMap().moveMapLeft();
-        	}
-        	isKeyLeftDown = true;
-        }
-        	
-        if (!input.isKeyDown(input.KEY_LEFT)) {
-        	isKeyLeftDown = false;
-        }
-        
-        if (input.isKeyDown(input.KEY_RIGHT)) {
-        	if(isKeyRightDown == false) {
-        		game.getWorldMap().moveMapRight();
-        		game.getWorldMap().moveMapRight();
-        	}
-        	isKeyRightDown = true;
-        }
-        
-        if (!input.isKeyDown(input.KEY_RIGHT)) {
-        	isKeyRightDown = false;
-        }
-        
-        if (input.isKeyDown(input.KEY_UP)) {
-        	if(isKeyUpDown == false) {
-        		game.getWorldMap().moveMapUp();
-        		game.getWorldMap().moveMapUp();
-        	}
-        	isKeyUpDown = true;
-        }
-        	
-        if (!input.isKeyDown(input.KEY_UP)) {
-        	isKeyUpDown = false;
-        }
-        
-        if (input.isKeyDown(input.KEY_DOWN)) {
-        	if(isKeyDownDown == false) {
-        		game.getWorldMap().moveMapDown();
-        		game.getWorldMap().moveMapDown();
-        	}
-        	isKeyDownDown = true;
-        }
-        	
-        if (!input.isKeyDown(input.KEY_DOWN)) {
-        	isKeyDownDown = false;
-        }
-    	    	    	    
-    	
-    	game.checkGUIHover(mouseX, mouseY);
-    	if (input.isMouseButtonDown(0)) {
-    		if(isLeftMouseDown == false) {
-    			isLeftMouseDown = true;
-    			
-    			boolean guiClicked = game.checkGUIClicked(mouseX, mouseY);    			
-    			
-    			// If the GUI wasn't clicked, it could have been one of the tiles
-    			if(!guiClicked) {
-    				for(Tile t : game.getWorldMap().getOnScreenTileList()) {
-    	    			
-    		    		t.setSelected(false);
-    		    		if (t.isClicked(mouseX, mouseY)) {
-    		    			t.setSelected(true);    		    			
-    		    		}
-    		    	}	
-    			}    			
-    		}    		    		
-    	}
-    	
-    	if(!input.isMouseButtonDown(0)) {
-    		isLeftMouseDown = false;
-    	}
-    	*/
+		
     
     }
  
