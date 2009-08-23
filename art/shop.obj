@@ -1,0 +1,28 @@
+# Blender3D v249 OBJ File: shop.blend
+# www.blender3d.org
+mtllib shop.mtl
+v 0.600000 1.200000 -0.600000
+v 0.600000 1.200000 0.600000
+v -0.600000 1.200000 0.600000
+v -0.600000 1.200000 -0.600000
+v 0.600000 -0.000000 -0.600000
+v 0.600000 0.000000 0.600000
+v -0.600000 0.000000 0.600000
+v -0.600000 -0.000000 -0.600000
+vt 0.000000 0.000000
+vt 0.000000 1.000000
+vt 1.000000 1.000000
+vt 1.000000 0.000000
+usemtl Material_wall3.png
+s off
+f 1/1 4/2 3/3 2/4
+usemtl Material_test.png
+f 5/1 6/2 7/3 8/4
+usemtl Material_wall1.png
+f 1/1 2/2 6/3 5/4
+usemtl Material_wall2.png
+f 2/1 3/2 7/3 6/4
+usemtl Material_test.png
+f 3/1 4/2 8/3 7/4
+usemtl Material_wall2.png
+f 4/3 1/4 5/1 8/2
